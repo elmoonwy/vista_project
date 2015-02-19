@@ -1,0 +1,2 @@
+module VistadataHelper
+end

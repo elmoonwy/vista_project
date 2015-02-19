@@ -1,0 +1,92 @@
+<script type="text/javascript">
+function FaSong(){
+  // alert("hahahah");
+  var insertQueryDetail = $('#insertQueryDetail').val();
+  var dataSourceFrom = $('#dataSourceFrom').val();
+  var dataSourceTo = $('#dataSourceTo').val();
+  $.ajax({
+  type: "POST",
+  url: "/queryvista",
+  data: { insertDetails: "", queryData: insertQueryDetail, dataFrom: dataSourceFrom, dataTo: dataSourceTo }
+  })
+  .done(function( msg ) {
+    alert( "Data Saved From "+dataSourceFrom+" To "+dataSourceTo+": " + msg );
+  });
+};
+// function showModal(){
+//   $("#0").zoomTarget();
+// }
+</script>
+<style type="text/css">
+  table.barby-barcode { border-spacing: 0; }
+  tr.barby-row {width: 60px;}
+  td.barby-cell { width: 3px; height: 100px; }
+  td.barby-cell.on { background: #000; }
+</style>
+
+<%#= raw @barcode_for_html.to_html %>
+
+<center><h1>SwissVault DATA Federation Service</h1></center><br><br>
+<form action=<%= root_path %> data-remote="true">
+  <div class="row">
+    <div class="large-6 columns">
+      <label>First Name
+        <input type="text" name="firstName" placeholder="First Name" />
+      </label> 
+    </div>
+    <div class="large-6 columns">
+      <label>Last Name
+        <input type="text" name="lastName" placeholder="Last Name" />
+      </label>
+    </div>    
+    <div class="large-6 columns">
+      <div class="row collapse">
+      <label>Date of Birth  (MM/DD/YYYY)</label>
+        <div class="small-2 columns">
+          <select name="monthOfBirth">
+            <% (1..12).each do |m| %>
+              <option value=<%= m.to_s %>><%= m %></option>
+            <% end %>
+          </select>
+        </div>
+        <div class="small-2 columns">
+          <span class="postfix">/</span>
+        </div>
+        <div class="small-2 columns">
+          <select name="dayOfBirth">
+            <% (1..31).each do |m| %>
+              <option value=<%= m.to_s %>><%= m %></option>
+            <% end %>
+          </select>
+        </div>
+        <div class="small-2 columns">
+          <span class="postfix">/</span>
+        </div>
+        <div class="small-4 columns">
+          <select name="yearOfBirth">
+            <% (1950..2015).each do |m| %>
+              <option value=<%= m.to_s %>><%= m %></option>
+            <% end %>
+          </select>
+        </div>
+    </div>
+    </div>
+    <div class="large-6 columns">
+      <label>Choose Your Gender</label>
+      <input type="radio" name="sex" value="male" id="sexMale"><label for="sexMale">Male</label>
+      <input type="radio" name="sex" value="female" id="sexFemale"><label for="sexFemale">Female</label>
+    </div>
+    <div class="large-12 columns">
+      <input type="submit" value="Submit" class="button" name="submitQueryForVista">
+    </div>
+  </div>
+</form>
+
+<div class="row">
+  <div class="large-12 columns" id="resultOfQuery">
+    <table cellpadding="0" cellspacing="0" border="0" class="display large-12 columns" id="example"></table>
+  </div>
+</div>
+
+<div id="firstModal" class="reveal-modal zoomViewport" data-reveal>
+</div>

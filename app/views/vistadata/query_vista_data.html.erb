@@ -1,0 +1,27 @@
+<!-- WIGGIN,ENDER -->
+<form>
+<div class="row">
+	<H1>HL7 Result</H1>
+	<% @HL7Result.each do |key,value| %>
+		<div class="large-4 columns">
+			<label><%= key %></label>	
+			<input type="text" value=<%= value %>></input>
+		</div>
+	<% end %>
+</div>
+<div class="row">
+<h1>Other Info</h1>
+<% @result.each do |key,value| %>
+<% if key!= "HL7" %>
+	<div class="large-4 columns">
+		<% if key== "COMBAT_VETERAN_END_DATE" || key=="APPOINTMENT_REQUEST_COMMENT" || key=="LAB_REFERRAL_REF" %>
+		<label><strong><ins><%= key %></ins></strong></label>
+		<% else %>
+		<label><%= key %></label>
+		<% end %>	
+		<input type="text" value=<%= value %>></input>
+	</div>
+<% end %>		
+<% end %>
+</div>
+</form>
