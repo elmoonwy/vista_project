@@ -7,7 +7,7 @@ class VistadataController < ApplicationController
 	# require 'barby/outputter/ascii_outputter'
 	# require 'barby/outputter/html_outputter'
 	# require 'bunny'
-	skip_before_filter :verify_authenticity_token, :only => [:query_vista_data]
+	# skip_before_filter :verify_authenticity_token, :only => [:query_vista_data]
 	def index
 		if params.has_key?(:submitQueryForVista)
 			firstName||= params[:firstName]
