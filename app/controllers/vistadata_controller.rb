@@ -7,7 +7,7 @@ class VistadataController < ApplicationController
 	# require 'barby/outputter/ascii_outputter'
 	# require 'barby/outputter/html_outputter'
 	# require 'bunny'
-	# skip_before_filter :verify_authenticity_token, :only => [:query_vista_data]
+	skip_before_filter :verify_authenticity_token, :only => [:query_vista_data]
 	def index
 		if params.has_key?(:submitQueryForVista)
 			firstName||= params[:firstName]
@@ -52,10 +52,10 @@ class VistadataController < ApplicationController
 											  .map(&:strip)
 											  .push(@result["AGE"])
 											  .push("<form method='post' action='/queryvista' class='button_to'><div><input type='hidden' name='queryData' value='"+JSON.generate(@result)+"'><input class='button tiny radius success' name='viewDetails' value='View Details' type='submit' /></div></form>")
-											  .push("<input type='hidden' name='queryData' id='insertQueryDetail' value='"+JSON.generate(@result)+"'><button class='button tiny radius success' id='insertDetails' onClick='FaSong();' >Insert</button>")
+											  .push("<a href='#'' data-reveal-id='firstModal' class='radius tiny  button'>View Pic</a>")	
 											  .push("<select name='dataSourceFrom' id='dataSourceFrom'><option value=Astronaut VistA>Astronaut VistA</option><option value=WorldVistA>WorldVistA</option><option value='OpenVistA'>OpenVistA</option><option value='Osehra-Vista'>Osehra-Vista</option><option value=vxVistA>vxVistA</option></select>")
 											  .push("<select name='dataSourceTo' id='dataSourceTo' ><option value=Mckesson>Mckesson</option><option value=Cerner>Cerner</option><option value=Siemens>Siemens</option><option value=Allscripts>Allscripts</option><option value=Epic>Epic</option></select>")
-											  .push("<a href='#'' data-reveal-id='firstModal' class='radius button'>View Pic</a>")	
+											  .push("<input type='hidden' name='queryData' id='insertQueryDetail' value='"+JSON.generate(@result)+"'><button class='button tiny radius success' id='insertDetails' onClick='FaSong();' >Insert</button>")
 											])
 			else
 				@HL7Result||= JSON.generate([["<form method='post' action='/queryvista' class='button_to'><div><input type='hidden' name='queryData' value='"+JSON.generate(ien)+"'><input class='button tiny radius success' name='viewDetails' value='View Details' type='submit' /></div></form>"]])
