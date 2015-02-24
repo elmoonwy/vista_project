@@ -10,7 +10,8 @@ function FaSong(){
   data: { insertDetails: "", queryData: insertQueryDetail, dataFrom: dataSourceFrom, dataTo: dataSourceTo }
   })
   .done(function( msg ) {
-    alert( "Data Saved From "+dataSourceFrom+" To "+dataSourceTo+": " + msg );
+    var return_string = "Data Saved From "+dataSourceFrom+" To "+dataSourceTo+": " + msg ;
+    $("#secondModal").html("<div class='alertBox' id='secondDiv'>"+return_string+"</div>");
   });
 };
 // function showModal(){
