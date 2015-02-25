@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   # root 'welcome#index'
   root 'vistadata#index', as: 'root'
   match '/queryvista', to: 'vistadata#query_vista_data', as: 'query_vista', via: :all
+  post '/qfmobil', to: 'vistadata#query_from_mobil', as: 'query_mobil'
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

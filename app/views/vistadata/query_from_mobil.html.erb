@@ -1,0 +1,101 @@
+<script type="text/javascript">
+function FaSong(){
+	var insertQueryDetail = $('#insertQueryDetail').val();
+	var dataSourceFrom = $('#dataSourceFrom').val();
+	var dataSourceTo = $('#dataSourceTo').val();
+	$.ajax({
+	  type: "POST",
+	  url: "/queryvista",
+	  data: { insertDetails: "", queryData: insertQueryDetail, dataFrom: dataSourceFrom, dataTo: dataSourceTo }
+	  })
+	  .done(function( msg ) {
+	    alert( "Data Saved From "+dataSourceFrom+" To "+dataSourceTo+": " + msg );
+	  });
+};
+</script>
+
+
+<div class="row">
+  <div class="large-12 columns" id="resultOfQuery">
+    <table cellpadding="0" cellspacing="0" border="0" class="display large-12 columns" id="vistalResult"></table>
+  </div>
+</div>
+<p>Test successful!<%= @HL7Result %></p>
+<!-- WIGGIN,ENDER -->
+
+<script type="text/javascript">
+	$( document ).ready(function() {
+    	var data_Set = gon.HL7Result;
+		var array_image = gon.array_image;
+		var image_length = array_image.length
+		$('#vistalResult').dataTable( {
+	        "data": data_Set,
+	        "columns": [
+		            { "title": "Last Name", "class": "center" },
+		            { "title": "First Name", "class": "center" },
+		            { "title": "Age", "class": "center" },
+		            { "title": "Action", "class": "center" },
+		            { "title": "Picture", "class": "center"},
+		            { "title": "Data From","class": "center" },
+		            { "title": "Data To", "class": "center"},
+		            { "title": "Insert"}
+	        	]
+   		} );
+   		$("#firstModal").html("<div class='zoomContainer' id='secondDiv'><ul id='id_ul' class='example-orbit' data-orbit></ul></div>");
+   		for (var i = 0; i < image_length; i++){
+   			$("#id_ul").append("<li>\
+        		<div id='<%= "+i+" %>' class='zoomTarget' style='min-height:417px;'><img style='margin: 0 auto;' src='data:image/jpeg;base64,<%= "+array_image[i]+" %>' alt='slide 1' /></div>\
+        		<div class='orbit-caption'>\
+          		Caption Three.\
+        		</div>\
+      		</li>");
+   		}
+   		$(document).foundation({
+	      	orbit: {
+	        animation: 'slide',
+	        timer_speed: 1000,
+	        pause_on_hover: true,
+	        animation_speed: 500,
+	        navigation_arrows: true,
+	        bullets: false
+      		}
+    	});
+	    $(document).on('opened', '[data-reveal]', function () {
+	    	var modal = $(this);
+	    	$(window).trigger('resize');
+	    });
+
+	    settings = {
+	        targetsize: 0.9,
+	        // scale content to screen based on their size
+	        // "width"|"height"|"both"
+	        scalemode: "both",
+	        // animation duration
+	        duration: 600,
+	        // easing of animation, similar to css transition params
+	        // "linear"|"ease"|"ease-in"|"ease-out"|"ease-in-out"|[p1,p2,p3,p4]
+	        // [p1,p2,p3,p4] refer to cubic-bezier curve params
+	        easing: "ease",
+	        // use browser native animation in webkit, provides faster and nicer
+	        // animations but on some older machines, the content that is zoomed
+	        // may show up as pixelated.
+	        nativeanimation: true,
+	        // root element to zoom relative to
+	        // (this element needs to be positioned)
+	        root: $("#firstModal"),
+	        // show debug points in element corners. helps
+	        // at debugging when zoomooz positioning fails
+	        debug: false,
+	        // this function is called with the element that is zoomed to in this
+	        // when animation ends
+	        animationendcallback: null,
+	        // this specifies, that clicking an element that is zoomed to zooms
+	        // back out
+	        closeclick: true,
+	        // don't reset scroll before zooming. less jaggy zoom starts and ends on
+	        // mobile browsers, but causes issues when zooming to elements when scrolled
+	        // to a specific distance in document, typically around 2000px on webkit.
+	        preservescroll: true
+    	};
+	});
+</script>

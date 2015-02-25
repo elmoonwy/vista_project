@@ -18,10 +18,10 @@ function FaSong(){
 // }
 </script>
 <style type="text/css">
-  table.barby-barcode { border-spacing: 0; }
+  /*table.barby-barcode { border-spacing: 0; }
   tr.barby-row {width: 60px;}
   td.barby-cell { width: 3px; height: 100px; }
-  td.barby-cell.on { background: #000; }
+  td.barby-cell.on { background: #000; }*/
 </style>
 
 <%#= raw @barcode_for_html.to_html %>
@@ -29,19 +29,19 @@ function FaSong(){
 <center><h1>SwissVault DATA Federation Service</h1></center><br><br>
 <form action=<%= root_path %> data-remote="true">
   <div class="row">
-    <div class="large-6 columns">
-      <label>First Name
+    <div class="large-9 columns">
+        <strong class="hide-for-small-only">First Name</strong>
         <input type="text" name="firstName" placeholder="First Name" />
       </label> 
     </div>
-    <div class="large-6 columns">
-      <label>Last Name
+    <div class="large-9 columns">
+      <strong class="hide-for-small-only">Last Name</strong>
         <input type="text" name="lastName" placeholder="Last Name" />
       </label>
     </div>    
-    <div class="large-6 columns">
+    <div class="large-9 columns">
       <div class="row collapse">
-      <label>Date of Birth  (MM/DD/YYYY)</label>
+      <strong class="hide-for-small-only">Date of Birth  (MM/DD/YYYY)</strong>
         <div class="small-2 columns">
           <select name="monthOfBirth">
             <% (1..12).each do |m| %>
@@ -50,19 +50,16 @@ function FaSong(){
           </select>
         </div>
         <div class="small-2 columns">
-          <span class="postfix">/</span>
-        </div>
-        <div class="small-2 columns">
           <select name="dayOfBirth">
             <% (1..31).each do |m| %>
               <option value=<%= m.to_s %>><%= m %></option>
             <% end %>
           </select>
         </div>
-        <div class="small-2 columns">
+        <!-- <div class="small-1 columns">
           <span class="postfix">/</span>
-        </div>
-        <div class="small-4 columns">
+        </div> -->
+        <div class="small-4 columns end">
           <select name="yearOfBirth">
             <% (1940..2015).each do |m| %>
               <option value=<%= m.to_s %>><%= m %></option>
@@ -71,10 +68,10 @@ function FaSong(){
         </div>
     </div>
     </div>
-    <div class="large-6 columns">
-      <label>Choose Your Gender</label>
-      <input type="radio" name="sex" value="male" id="sexMale"><label for="sexMale">Male</label>
-      <input type="radio" name="sex" value="female" id="sexFemale"><label for="sexFemale">Female</label>
+    <div class="large-9 columns">
+      <strong>Choose Your Gender</strong>
+      <input type="radio" name="sex" value="male" id="sexMale"><label for="sexMale"><strong>Male</strong></label>
+      <input type="radio" name="sex" value="female" id="sexFemale"><label for="sexFemale"><strong>Female</strong></label>
     </div>
     <div class="large-12 columns">
       <input type="submit" value="Submit" class="button" name="submitQueryForVista">
