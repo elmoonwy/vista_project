@@ -1,90 +1,147 @@
 <script type="text/javascript">
-function FaSong(){
+  function FaSong(){
   // alert("hahahah");
   var insertQueryDetail = $('#insertQueryDetail').val();
   var dataSourceFrom = $('#dataSourceFrom').val();
   var dataSourceTo = $('#dataSourceTo').val();
   $.ajax({
-  type: "POST",
-  url: "/queryvista",
-  data: { insertDetails: "", queryData: insertQueryDetail, dataFrom: dataSourceFrom, dataTo: dataSourceTo }
+    type: "POST",
+    url: "/queryvista",
+    data: { insertDetails: "", queryData: insertQueryDetail, dataFrom: dataSourceFrom, dataTo: dataSourceTo }
   })
   .done(function( msg ) {
     var return_string = "Data Saved From "+dataSourceFrom+" To "+dataSourceTo+": " + msg ;
     $("#secondModal").html("<div class='alertBox' id='secondDiv'>"+return_string+"</div>");
   });
 };
-// function showModal(){
-//   $("#0").zoomTarget();
-// }
-</script>
-<style type="text/css">
-  /*table.barby-barcode { border-spacing: 0; }
-  tr.barby-row {width: 60px;}
-  td.barby-cell { width: 3px; height: 100px; }
-  td.barby-cell.on { background: #000; }*/
-</style>
 
-<%#= raw @barcode_for_html.to_html %>
+
+function debug(string) {
+  var element = document.getElementById("debug");
+  var p = document.createElement("p");
+  p.appendChild(document.createTextNode(string));
+  element.appendChild(p);
+}
+
+var Socket = "MozWebSocket" in window ? MozWebSocket : WebSocket;
+var ws = new Socket("ws://10.0.80.59:8998");
+ws.onmessage = function(evt) { 
+  // alert(evt.data);
+  var ienid = evt.data;
+  $.ajax({
+    type: "POST",
+    url: "/qfmobil",
+    data: { submitQueryForVista: "", ien: ienid }
+  }).done(function( msg ) {
+    if(msg[0].length != 1 ) {
+      alert("You hava a patient information sending from sanner");
+      var data_Set =msg;
+      $('#example').dataTable( {
+        "data": data_Set,
+        "columns": [
+        { "title": "Last Name", "class": "center" },
+        { "title": "First Name", "class": "center" },
+        { "title": "Age", "class": "center" },
+        { "title": "Action", "class": "center" },
+        { "title": "Picture", "class": "center"},
+        { "title": "Data From","class": "center" },
+        { "title": "Data To", "class": "center"},
+        { "title": "Insert"}
+        ]
+      } );
+    }
+    else{
+      $('#resultOfQuery').html(msg[0]);
+    } 
+  });
+};
+
+ws.onclose = function(event) {
+  debug("Closed - code: " + event.code + ", reason: " + event.reason + ", wasClean: " + event.wasClean);
+};
+
+ws.onopen = function() {
+  // ws.send(1);
+};
+
+</script>
+
 
 <center><h1>SwissVault DATA Federation Service</h1></center><br><br>
 <form action=<%= root_path %> data-remote="true">
   <div class="row">
-    <div class="large-9 columns">
-        <strong class="hide-for-small-only">First Name</strong>
-        <input type="text" name="firstName" placeholder="First Name" />
-      </label> 
+    <div class="small-3 columns">
+      <label for="right-label" class="right inline"><strong class="hide-for-small-only">First Name: </strong></label>
     </div>
-    <div class="large-9 columns">
-      <strong class="hide-for-small-only">Last Name</strong>
-        <input type="text" name="lastName" placeholder="Last Name" />
-      </label>
-    </div>    
-    <div class="large-9 columns">
+    <div class="small-9 columns">
+      <input type="text" name="firstName" placeholder="First Name" />
+    </div>
+  </div>
+  <div class="row">   
+    <div class="small-3 columns">
+      <label for="right-label" class="right inline"><strong class="hide-for-small-only">Last Name: </strong></label>
+    </div>
+    <div class="small-9 columns">
+      <input type="text" name="lastName" placeholder="Last Name" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="small-3 columns">
+      <label for="right-label" class="right inline"><strong class="hide-for-small-only">Date of Birth  (MM/DD/YYYY)</strong></label>
+    </div>
+    <div class="small-9 columns">
       <div class="row collapse">
-      <strong class="hide-for-small-only">Date of Birth  (MM/DD/YYYY)</strong>
         <div class="small-2 columns">
           <select name="monthOfBirth">
             <% (1..12).each do |m| %>
-              <option value=<%= m.to_s %>><%= m %></option>
+            <option value=<%= m.to_s %>><%= m %></option>
             <% end %>
           </select>
         </div>
         <div class="small-2 columns">
           <select name="dayOfBirth">
             <% (1..31).each do |m| %>
-              <option value=<%= m.to_s %>><%= m %></option>
+            <option value=<%= m.to_s %>><%= m %></option>
             <% end %>
           </select>
         </div>
-        <!-- <div class="small-1 columns">
-          <span class="postfix">/</span>
-        </div> -->
         <div class="small-4 columns end">
           <select name="yearOfBirth">
             <% (1940..2015).each do |m| %>
-              <option value=<%= m.to_s %>><%= m %></option>
+            <option value=<%= m.to_s %>><%= m %></option>
             <% end %>
           </select>
         </div>
+      </div>  
     </div>
+  </div>
+
+  <div class="row">   
+    <div class="small-3 columns">
+      <label for="right-label" class="right inline"><strong class="hide-for-small-only">Choose Your Gender: </strong></label>
     </div>
-    <div class="large-9 columns">
-      <strong>Choose Your Gender</strong>
-      <input type="radio" name="sex" value="male" id="sexMale"><label for="sexMale"><strong>Male</strong></label>
-      <input type="radio" name="sex" value="female" id="sexFemale"><label for="sexFemale"><strong>Female</strong></label>
+    <div class="small-9 columns" style="padding-top: 9px;">
+      <input type="radio" name="pokemon" value="male" id="male"><label for="pokemonRed"><strong>Male</strong></label>
+      <input type="radio" name="pokemon" value="female" id="female"><label for="pokemonBlue"><strong>Female</strong></label>
     </div>
-    <div class="large-12 columns">
+  </div>
+
+
+  <div class="row">
+    <div class="small-2 small-offset-10 columns">
       <input type="submit" value="Submit" class="button" name="submitQueryForVista">
     </div>
   </div>
 </form>
 
+
 <div class="row">
-  <div class="large-12 columns" id="resultOfQuery">
-    <table cellpadding="0" cellspacing="0" border="0" class="display large-12 columns" id="example"></table>
+  <div class="small-12 columns" id="resultOfQuery">
+    <table cellpadding="0" cellspacing="0" border="0" class="display small-12 columns" id="example"></table>
   </div>
 </div>
+
+<div id="debug" onload="init();"></div>
 
 <div id="firstModal" class="reveal-modal zoomViewport" data-reveal>
 </div>

@@ -89,33 +89,33 @@ class VistadataController < ApplicationController
 
 	def query_from_mobil
 		if params.has_key?(:submitQueryForVista) and params.has_key?(:ien)
-			ien||= params[:ien]
-
+			ien= params[:ien]
+			# byebug
 			# connect with the vista server
-			url||= URI.parse("http://10.0.80.172:8080/CacheWebAPI/WebAPI?ien=#{ien}")
-			url_image||=URI.parse("http://10.0.80.173:8080/CacheWebAPI/WebAPI?action=radiology")
+			url||= URI.parse("http://10.0.80.173:8080/CacheWebAPI/WebAPI?ien=#{ien}")
+			# url_image||=URI.parse("http://10.0.80.173:8080/CacheWebAPI/WebAPI?action=radiology")
 			req = Net::HTTP::Get.new(url.to_s)
-			req_image = Net::HTTP::Get.new(url_image.to_s)			
+			# req_image = Net::HTTP::Get.new(url_image.to_s)			
 			res = Net::HTTP.start(url.host, url.port) {|http|
 			  http.request(req)
 			}
-			res_image = Net::HTTP.start(url_image.host, url_image.port) {|http|
-			  http.request(req_image)
-			}
+			# res_image = Net::HTTP.start(url_image.host, url_image.port) {|http|
+			#   http.request(req_image)
+			# }
 
 
 			# remove HL7 key when sending to tao
 			@result= JSON.parse(res.body)[0]
-			@result_image = JSON.parse(res_image.body)[0]["STREAM"]
-			@result_image= @result_image.delete("\n")
+			# @result_image = JSON.parse(res_image.body)[0]["STREAM"]
+			# @result_image= @result_image.delete("\n")
 
-			@array_image = []
-			array_stringImage = JSON.parse(res_image.body)
-			for image in array_stringImage
-				formatImage = image["STREAM"].delete("\n")
-				@array_image.append(formatImage)
-			end
-			gon.array_image = @array_image
+			# @array_image = []
+			# array_stringImage = JSON.parse(res_image.body)
+			# for image in array_stringImage
+			# 	formatImage = image["STREAM"].delete("\n")
+			# 	@array_image.append(formatImage)
+			# end
+			# gon.array_image = @array_image
 
 			
 			unless @result.nil?
@@ -131,8 +131,13 @@ class VistadataController < ApplicationController
 											])
 				gon.HL7Result = @HL7Result
 			else
-				@HL7Result||= JSON.generate([["<form method='post' action='/queryvista' class='button_to'><div><input type='hidden' name='queryData' value='"+JSON.generate(ien)+"'><input class='button tiny radius success' name='viewDetails' value='View Details' type='submit' /></div></form>"]])
+				@HL7Result||= JSON.generate([["<form method='post' action='/queryvista' class='button_to'><div class='row'><fieldset><legend>No Record In the Database Create New One</legend><div class='small-8 colums' ><input type='hidden' name='queryData' value='1'><div class='row'><div class='small-3 columns'><label for='right-label' class='right inline'>First Name</label></div><div class='small-9 columns'><input type='text' id='right-label' name='NewRecordFName' placeholder='First Name'></div></div><div class='row'><div class='small-3 columns'><label for='right-label' class='right inline'>Last Name</label></div><div class='small-9 columns'><input type='text' id='right-label' name='NewRecordLName' placeholder='Last Name'></div></div><div class='row'><input class='small-offset-3 small-9 colums button tiny radius success' name='Create New' value='View Details' type='submit' /></div></div></fieldset></div></form>"]])
 			end
+			respond_to do |format|
+		      	format.json { render :json => @HL7Result }
+		      	# render :json => {:HL7Result => @HL7Result}.to_json
+
+		    end
 		end
 	end
 end
