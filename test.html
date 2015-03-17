@@ -1,0 +1,42 @@
+<html>
+  <head>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script>
+      function init() {
+        function debug(string) {
+          var element = document.getElementById("debug");
+          var p = document.createElement("p");
+          p.appendChild(document.createTextNode(string));
+          element.appendChild(p);
+        }
+        var Socket = "MozWebSocket" in window ? MozWebSocket : WebSocket;
+        var ws = new Socket("ws://10.0.80.68:8998");
+        ws.onmessage = function(evt) { 
+          debug("Receivedhaha: " + evt.data); alert(evt.data);
+          var ienid = evt.data;
+          $.ajax({
+          type: "POST",
+          url: "/qfmobil",
+          data: { submitQueryForVista: "", ien: ienid }
+          })
+          .done(function( msg ) {
+            alert("Message received"+msg);
+          });
+        };
+
+        ws.onclose = function(event) {
+          debug("Closed - code: " + event.code + ", reason: " + event.reason + ", wasClean: " + event.wasClean);
+        };
+
+
+        ws.onopen = function() {
+          debug("connected...");
+          // ws.send(1);
+        };
+      };
+    </script>
+  </head>
+  <body onload="init();">
+    <div id="debug"></div>
+  </body>
+</html>
